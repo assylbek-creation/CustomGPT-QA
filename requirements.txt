@@ -1,0 +1,22 @@
+torch>=2.2
+numpy>=1.26
+tiktoken>=0.7
+tqdm>=4.66
+
+# Data
+wikipedia-api>=0.6
+beautifulsoup4>=4.12
+
+# RAG
+faiss-cpu>=1.8
+sentence-transformers>=2.7
+
+# GUI
+streamlit>=1.34
+
+# Tracking
+wandb>=0.17
+
+# Notebooks
+jupyter>=1.0
+matplotlib>=3.8
