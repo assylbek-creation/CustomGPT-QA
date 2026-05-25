@@ -46,6 +46,7 @@ wandb/
 runs/
 logs/
 training.log
+streamlit.log
 *.bin
 *.pt
 *.pth
