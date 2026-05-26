@@ -18,13 +18,17 @@ from src.model.attention import MultiHeadMaskedSelfAttention
 
 
 class FeedForward(nn.Module):
-    """Position-wise MLP: Linear -> GELU -> Linear -> Dropout. Expands 4x."""
+    """Position-wise MLP: Linear -> GELU -> Linear -> Dropout. Expands 4x.
+
+    Uses tanh-approximate GELU to match HuggingFace GPT-2's NewGELU activation,
+    so we can load pretrained GPT-2 weights without an activation mismatch.
+    """
 
     def __init__(self, cfg: GPTConfig):
         super().__init__()
         self.net = nn.Sequential(
             nn.Linear(cfg.n_embd, 4 * cfg.n_embd, bias=cfg.bias),
-            nn.GELU(),
+            nn.GELU(approximate="tanh"),
             nn.Linear(4 * cfg.n_embd, cfg.n_embd, bias=cfg.bias),
             nn.Dropout(cfg.dropout),
         )

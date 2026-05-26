@@ -86,6 +86,8 @@ def resolve_device(requested: str) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--data", default="data/processed", type=Path)
+    parser.add_argument("--init-from", type=Path, default=None,
+                        help="Checkpoint to initialize model weights from (e.g. checkpoints/gpt2_init.pt)")
     parser.add_argument("--max-iters", type=int, default=None)
     parser.add_argument("--batch-size", type=int, default=None)
     parser.add_argument("--eval-interval", type=int, default=None)
@@ -112,7 +114,14 @@ def main() -> None:
     val_data = np.memmap(args.data / "val.bin", dtype=np.uint16, mode="r")
     print(f"train: {len(train_data):,} tokens | val: {len(val_data):,} tokens")
 
-    model = GPT(gcfg).to(device)
+    if args.init_from is not None:
+        print(f"init from: {args.init_from}")
+        ckpt = torch.load(args.init_from, map_location="cpu", weights_only=False)
+        gcfg = GPTConfig(**ckpt["config"])      # use the saved model shape
+        model = GPT(gcfg).to(device)
+        model.load_state_dict(ckpt["model"])
+    else:
+        model = GPT(gcfg).to(device)
     n_params = sum(p.numel() for p in model.parameters())
     print(f"model: {n_params/1e6:.2f}M params")
 
