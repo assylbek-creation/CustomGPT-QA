@@ -11,6 +11,9 @@ beautifulsoup4>=4.12
 faiss-cpu>=1.8
 sentence-transformers>=2.7
 
+# Pretrained-weights loader
+transformers>=4.40
+
 # GUI
 streamlit>=1.34
 
